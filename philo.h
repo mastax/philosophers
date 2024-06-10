@@ -11,86 +11,63 @@
 /* ************************************************************************** */
 
 #ifndef PHILO_H
-#define PHILO_H
+# define PHILO_H
 
-# include <limits.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <string.h>
-# include <pthread.h>
-# include <sys/time.h>
 # include <stdlib.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <unistd.h>
+# include <sys/time.h>
 
-typedef struct x_philo
+typedef struct s_philosopher
 {
-    int                 id_of_philo;
-    int                 eat;//
-    long long           last_meal;//
-    pthread_mutex_t     *left_chopsticks;
-    pthread_mutex_t     *right_chopsticks;
-    pthread_t           thread_id;
-    struct x_data       *data;
-}                               t_philos;
+	int				identifier;
+	int				num_of_meals;
+	int				left_fork;
+	int				right_fork;
+	long long		last_meal_time;
+	struct s_dining_info	*dining_info;
+	pthread_t		philosopher_thread;
+	long long start_time;
+	long long last_event_time;
 
-typedef struct x_data
+}					t_philosopher;
+
+typedef struct s_dining_info
 {
-    int             ac;
-    char            **av;
-    int             nbr_philos;
-    int             time_2_die;
-    int             time_2_sleep;
-    int             time_2_eat;
-    int             must_eat;
-    int             dead;
-    int             all_are_ate;
-    long long       birth;
-    char            **arguments;
-    char            *combined_args;
-    t_philos        philo[200];
-    int             total;
-    long long       time;
-    long long       norm;
-    long long       norm2;
-    t_philos        *n;
-    pthread_mutex_t eat;
-    pthread_mutex_t chopsticks[200];
-    pthread_mutex_t output;
-}                            t_data;
+	int				num_philosophers;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				num_must_eat;
+	int				num_full_philosophers;
+	int				finish;
+	long long		start_time;
+	t_philosopher			*philosophers;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	meal_mutex;
+	pthread_mutex_t	finish_mutex;
+}					t_dining_info;
 
-/* parsing functions*/
-int     parse_arguments(t_data *data);
-int     validate_arguments(char **arguments);
-int     validate_plus(char **arguments);
-int     validate_max(char **arg);
-char    *ft_joining_args(char **av, int ac);
-int     ft_is_digit(int k);
-void	handle_error(void);
-void    free_split(char **str);
-void	*routine(void *ptr);
+int		    report_error(char *message);
+int			ft_atoi_custom(const char *nptr);
+long long	get_current_time(void);
+void		report_status(t_philosopher *philosopher, const char *message, long long start_time);
+void		custom_sleep(t_philosopher *philosopher, long long ms);
 
-long long	ft_timestamp(void);
-int	ft_start_mutex(t_data *data);
-void	ft_output(t_data *data, int philo_id, char *str);
-char    *ft_strjoin(char *s1, char *s2);
-int	ft_strlen(char *str);
-int	ft_initialize_data(t_data *data);
-void	ft_initialize_philosophers(t_data *data);
-int	ft_create_philosophers(t_data *data);
-void	handle_error(void);
-char	*ft_substr(char *s, int start, size_t len);
-int	ft_atoi(const char *str);
-long long	ft_period(long long past, long long present);
-void	ft_sleep(long long time, t_data *data);
-void	ft_eat(t_philos *philos);
-void	ft_destroy(t_data *data);
-int	ft_join_destroy(t_data *data);
-int	ft_check_total_eat(t_data *data);
-int	ft_check_dead(t_data *data);
-/*helper functions*/
-int     ft_atoi(const char *str);
-char	*ft_substr(char *s, int start, size_t len);
-char    **ft_split(char *s, char c);
-int     ft_strlen(char *str);
+int			initialize_info(t_dining_info *dining_info, int ac, char **av);
+int			initialize_philosophers(t_dining_info *dining_info);
+int			initialize_mutex(t_dining_info *dining_info);
+int			create_philosophers(t_dining_info *dining_info);
 
+int			check_death(t_philosopher *philosopher);
+int			check_completion(t_philosopher *philosopher, int yes);
+void		*philosopher_thread_start(void *arg);
+
+int			free_info(t_dining_info *dining_info);
+int			free_and_destroy(t_dining_info *dining_info);
+void		join_free_and_destroy(t_dining_info *dining_info);
+void		destroy_resources(t_dining_info *dining_info);
 
 #endif

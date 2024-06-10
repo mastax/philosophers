@@ -1,0 +1,46 @@
+Sure! Here's a script that describes how the project works and how each function contributes to its functionality:
+
+Script: Understanding the Dining Philosophers Problem Implementation
+
+Introduction:
+The Dining Philosophers Problem is a classic synchronization problem often used to illustrate the challenges of deadlock and resource allocation in concurrent programming. 
+In this implementation, we have a certain number of philosophers sitting around a table, 
+each thinking and eating. 
+However, there are only a limited number of forks available for them to eat, 
+and they must share them without causing deadlock or starvation.
+
+1. Initialization:
+
+The main function initializes the dining information and starts the simulation.
+initialize_info parses command-line arguments and initializes the dining configuration.
+initialize_philosophers creates philosopher threads and initializes their attributes.
+initialize_mutex initializes the mutexes used for synchronization.
+2. Philosopher Threads:
+
+philosopher_thread_start represents the behavior of each philosopher thread.
+Philosophers alternate between thinking, eating, and sleeping.
+If a philosopher's time limit without eating is exceeded, they die, 
+and the simulation might terminate.
+3. Eating and Deadlock Prevention:
+
+Philosophers attempt to acquire both their left and right forks before eating to prevent deadlock.
+The eat function simulates a philosopher picking up forks and eating.
+check_death ensures that philosophers die if they exceed their time limit without eating, 
+preventing starvation.
+4. Completion and Output:
+
+check_completion checks if the simulation has completed.
+The report_status function prints the current status of philosophers and the completion of the simulation.
+5. Resource Management and Cleanup:
+
+free_info and free_and_destroy functions handle memory deallocation and mutex destruction.
+destroy_resources ensures proper cleanup after the simulation finishes.
+Conclusion:
+This project effectively demonstrates the Dining Philosophers Problem, 
+showing how to manage shared resources and synchronize concurrent processes to avoid deadlocks and starvation.
+
+End of Script
+
+This script provides an overview of the project's structure, the purpose of each function,
+and how they contribute to solving the Dining Philosophers Problem. 
+Let me know if you need further clarification on any part!
