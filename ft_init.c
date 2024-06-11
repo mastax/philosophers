@@ -46,7 +46,6 @@ int	initialize_philosophers(t_dining_info *dining_info)
 		dining_info->philosophers[i].num_of_meals = 0;
 		dining_info->philosophers[i].last_meal_time = dining_info->start_time;
 		dining_info->philosophers[i].dining_info = dining_info;
-		dining_info->philosophers[i].last_event_time = dining_info->start_time;
 	}
 	return (0);
 }
@@ -77,9 +76,9 @@ int	create_philosophers(t_dining_info *dining_info)
 	i = -1;
 	if (dining_info->num_philosophers == 1)
 	{
-		report_status(&dining_info->philosophers[0], "has taken a fork", get_current_time());
+		report_status(&dining_info->philosophers[0], "has taken a fork");
 		custom_sleep(&dining_info->philosophers[0], dining_info->time_to_die);
-		report_status(&dining_info->philosophers[0], "died", get_current_time());
+		report_status(&dining_info->philosophers[0], "died");
 		check_completion(&dining_info->philosophers[0], 1);
 		return (0);
 	}

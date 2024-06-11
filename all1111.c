@@ -242,7 +242,7 @@ int	check_death(t_philosopher *philosopher)
 	return (0);
 }
 
-static void	eat(t_philosopher *philosopher)
+static void eat(t_philosopher *philosopher)
 {
 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->left_fork]);
 	report_status(philosopher, "has taken a fork");
@@ -257,6 +257,22 @@ static void	eat(t_philosopher *philosopher)
 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->right_fork]);
 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->left_fork]);
 }
+
+// static void	eat(t_philosopher *philosopher)
+// {
+// 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->left_fork]);
+// 	report_status(philosopher, "has taken a fork");
+// 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->right_fork]);
+// 	report_status(philosopher, "has taken a fork");
+// 	report_status(philosopher, "is eating");
+// 	custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
+// 	pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
+// 	philosopher->num_of_meals += 1;
+// 	philosopher->last_meal_time = get_current_time();
+// 	pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+// 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->right_fork]);
+// 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->left_fork]);
+// }
 
 int	check_completion(t_philosopher *philosopher, int yes)
 {
@@ -276,14 +292,15 @@ int	check_completion(t_philosopher *philosopher, int yes)
 	return (0);
 }
 
-void	*philosopher_thread_start(void *arg)
+
+void *philosopher_thread_start(void *arg)
 {
-	t_philosopher	*philosopher;
+	t_philosopher *philosopher;
 
 	philosopher = (t_philosopher *)arg;
 	if (philosopher->identifier % 2 == 0)
-		usleep(philosopher->dining_info->time_to_eat * 1000);
-	while (42)
+		usleep(philosopher->dining_info->time_to_eat * 100);
+	while (1)
 	{
 		if (check_completion(philosopher, 0))
 			return (0);
@@ -294,6 +311,25 @@ void	*philosopher_thread_start(void *arg)
 	}
 	return (0);
 }
+
+// void	*philosopher_thread_start(void *arg)
+// {
+// 	t_philosopher	*philosopher;
+
+// 	philosopher = (t_philosopher *)arg;
+// 	if (philosopher->identifier % 2 == 0)
+// 		usleep(philosopher->dining_info->time_to_eat * 1000);
+// 	while (1)
+// 	{
+// 		if (check_completion(philosopher, 0))
+// 			return (0);
+// 		eat(philosopher);
+// 		report_status(philosopher, "is sleeping");
+// 		custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
+// 		report_status(philosopher, "is thinking");
+// 	}
+// 	return (0);
+// }
 
 int	report_error(char *str)
 {
@@ -333,6 +369,7 @@ int	ft_atoi_custom(const char *nptr)
 	return (n * sign);
 }
 
+
 long long	get_current_time(void)
 {
 	struct timeval	timeval;
@@ -341,9 +378,9 @@ long long	get_current_time(void)
 	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
 }
 
-void	report_status(t_philosopher *philosopher, const char *str)
+void report_status(t_philosopher *philosopher, const char *str)
 {
-	long long	t;
+	long long t;
 
 	pthread_mutex_lock(&philosopher->dining_info->print_mutex);
 	if (!check_completion(philosopher, 0))
@@ -356,14 +393,41 @@ void	report_status(t_philosopher *philosopher, const char *str)
 		printf("Philosophers Success\n");
 }
 
+// void	report_status(t_philosopher *philosopher, const char *str)
+// {
+// 	long long	t;
+
+// 	pthread_mutex_lock(&philosopher->dining_info->print_mutex);
+// 	if (!check_completion(philosopher, 0))
+// 	{
+// 		t = get_current_time() - philosopher->dining_info->start_time;
+// 		printf("[%lld] Philosopher: [%d] %s\n", t, philosopher->identifier, str);
+// 	}
+// 	pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
+// 	if (str[0] == 'f')
+// 		printf("Philosophers Success\n");
+// }
+
+
 void	custom_sleep(t_philosopher *philosopher, long long ms)
 {
-	long long	t;
+	long long	end_time;
 
-	t = get_current_time();
-	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
-		usleep(700);
+	end_time = get_current_time() + ms;
+	while (get_current_time() < end_time)
+	{
+		if (check_completion(philosopher, 0))
+			return;
+		usleep(100);  // Sleep for a short time to avoid busy waiting
+	}
 }
 
+// void	custom_sleep(t_philosopher *philosopher, long long ms)
+// {
+// 	long long	t;
 
+// 	t = get_current_time();
+// 	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
+// 		usleep(700);
+// }
 

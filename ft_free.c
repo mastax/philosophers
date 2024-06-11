@@ -48,5 +48,5 @@ void	destroy_resources(t_dining_info *dining_info)
 		}
 		usleep(10);
 	}
-	join_free_and_destroy(dining_info);
+		join_free_and_destroy(dining_info);
 }

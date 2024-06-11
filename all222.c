@@ -164,24 +164,46 @@ int	check_completion(t_philosopher *philosopher, int yes)
 	return (0);
 }
 
-void	*philosopher_thread_start(void *arg)
+void *philosopher_thread_start(void *arg)
 {
-	t_philosopher	*philosopher;
+    t_philosopher *philosopher;
+    long long delay;
 
-	philosopher = (t_philosopher *)arg;
-	if (philosopher->identifier % 2 == 0)
-		usleep(philosopher->dining_info->time_to_eat * 1000);
-	while (42)
-	{
-		if (check_completion(philosopher, 0))
-			return (0);
-		eat(philosopher);
-		report_status(philosopher, "is sleeping", get_current_time());
-		custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
-		report_status(philosopher, "is thinking", get_current_time());
-	}
-	return (0);
+    philosopher = (t_philosopher *)arg;
+    delay = philosopher->dining_info->time_to_eat * (philosopher->identifier % 2);
+    custom_sleep(philosopher, delay);
+
+    while (42)
+    {
+        if (check_completion(philosopher, 0))
+            return (0);
+		philosopher->last_meal_time = get_current_time();
+        eat(philosopher);
+        report_status(philosopher, "is sleeping", get_current_time());
+        custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
+        report_status(philosopher, "is thinking", get_current_time());
+    }
+    return (0);
 }
+
+// void	*philosopher_thread_start(void *arg)
+// {
+// 	t_philosopher	*philosopher;
+
+// 	philosopher = (t_philosopher *)arg;
+// 	if (philosopher->identifier % 2 == 0)
+// 		usleep(philosopher->dining_info->time_to_eat * 1000);
+// 	while (42)
+// 	{
+// 		if (check_completion(philosopher, 0))
+// 			return (0);
+// 		eat(philosopher);
+// 		report_status(philosopher, "is sleeping", get_current_time());
+// 		custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
+// 		report_status(philosopher, "is thinking", get_current_time());
+// 	}
+// 	return (0);
+// }
 
 int	initialize_info(t_dining_info *dining_info, int ac, char **av)
 {
@@ -226,12 +248,35 @@ int	initialize_philosophers(t_dining_info *dining_info)
 		dining_info->philosophers[i].identifier = i + 1;
 		dining_info->philosophers[i].left_fork = i;
 		dining_info->philosophers[i].right_fork = (i + 1) % dining_info->num_philosophers;
-		dining_info->philosophers[i].num_of_meals = 0;
+		// dining_info->philosophers[i].num_of_meals = 0;
+		dining_info->philosophers[i].last_meal_time = dining_info->start_time;
 		dining_info->philosophers[i].last_meal_time = dining_info->start_time;
 		dining_info->philosophers[i].dining_info = dining_info;
 	}
 	return (0);
 }
+
+// int	initialize_philosophers(t_dining_info *dining_info)
+// {
+// 	int	i;
+
+// 	i = -1;
+// 	dining_info->philosophers = malloc(sizeof(t_philosopher) * dining_info->num_philosophers);
+// 	dining_info->forks = malloc(sizeof(pthread_mutex_t) * dining_info->num_philosophers);
+// 	dining_info->start_time = get_current_time();
+// 	if (!dining_info->philosophers || !dining_info->forks)
+// 		return (report_error("Error: Failed to allocate memory for philosophers or forks.\n"));
+// 	while (++i < dining_info->num_philosophers)
+// 	{
+// 		dining_info->philosophers[i].identifier = i + 1;
+// 		dining_info->philosophers[i].left_fork = i;
+// 		dining_info->philosophers[i].right_fork = (i + 1) % dining_info->num_philosophers;
+// 		dining_info->philosophers[i].num_of_meals = 0;
+// 		dining_info->philosophers[i].last_meal_time = dining_info->start_time;
+// 		dining_info->philosophers[i].dining_info = dining_info;
+// 	}
+// 	return (0);
+// }
 
 int	initialize_mutex(t_dining_info *dining_info)
 {
@@ -364,13 +409,21 @@ int	ft_atoi_custom(const char *nptr)
 	return (n * sign);
 }
 
-long long	get_current_time(void)
+long long get_current_time(void)
 {
-	struct timeval	timeval;
+    struct timeval timeval;
 
-	gettimeofday(&timeval, NULL);
-	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
+    gettimeofday(&timeval, NULL);
+    return ((timeval.tv_sec * 1000000) + timeval.tv_usec);
 }
+
+// long long	get_current_time(void)
+// {
+// 	struct timeval	timeval;
+
+// 	gettimeofday(&timeval, NULL);
+// 	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
+// }
 
 void	report_status(t_philosopher *philosopher, const char *str, long long start_time)
 {
@@ -386,17 +439,31 @@ void	report_status(t_philosopher *philosopher, const char *str, long long start_
 	pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
 	if (str[0] == 'f')
 		printf("Philosophers Success\n");
+
 }
 
-void	custom_sleep(t_philosopher *philosopher, long long ms)
+void custom_sleep(t_philosopher *philosopher, long long ms)
 {
-	long long	t;
+    long long target_time = get_current_time() + ms;
+    long long current_time;
 
-	t = get_current_time();
-	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
-	{
-		usleep(900);
-	}
+    while ((current_time = get_current_time()) < target_time)
+    {
+        usleep(100); // Introduce a small delay of 100 microseconds
+    }
 }
 
+// void	custom_sleep(t_philosopher *philosopher, long long ms)
+// {
+// 	long long	t;
 
+// 	t = get_current_time();
+// 	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
+// 	{
+// 		usleep(900);
+// 	}
+// }
+
+
+
+   

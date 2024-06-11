@@ -46,17 +46,14 @@ long long	get_current_time(void)
 	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
 }
 
-void	report_status(t_philosopher *philosopher, const char *str, long long start_time)
+void	report_status(t_philosopher *philosopher, const char *str)
 {
-	long long t;
-	//  = get_current_time() - philosopher->start_time;
-	// long long	t;
+	long long	t;
 
 	pthread_mutex_lock(&philosopher->dining_info->print_mutex);
 	if (!check_completion(philosopher, 0))
 	{
-		t = philosopher->last_event_time - philosopher->start_time;
-		// t = get_current_time() - philosopher->dining_info->start_time;
+		t = get_current_time() - philosopher->dining_info->start_time;
 		printf("[%lld] Philosopher: [%d] %s\n", t, philosopher->identifier, str);
 	}
 	pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
@@ -70,5 +67,5 @@ void	custom_sleep(t_philosopher *philosopher, long long ms)
 
 	t = get_current_time();
 	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
-		usleep(100);
+		usleep(600);
 }
