@@ -26,7 +26,7 @@ int	check_death(t_philosopher *philosopher)
 	return (0);
 }
 
-static void	eat(t_philosopher *philosopher)
+void	eat(t_philosopher *philosopher)
 {
 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->left_fork]);
 	report_status(philosopher, "has taken a fork");

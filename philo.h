@@ -47,6 +47,8 @@ typedef struct s_dining_info
 	pthread_mutex_t	finish_mutex;
 }					t_dining_info;
 
+void	eat(t_philosopher *philosopher);
+void handle_special_case(t_dining_info *dining_info);
 int		    report_error(char *message);
 int			ft_atoi_custom(const char *nptr);
 long long	get_current_time(void);

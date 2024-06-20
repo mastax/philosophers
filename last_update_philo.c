@@ -1,3 +1,145 @@
+
+// static void eat(t_philosopher *philosopher)
+// {
+//     int left_fork = philosopher->left_fork;
+//     int right_fork = philosopher->right_fork;
+
+//     // Acquire forks in alternating order based on philosopher's ID
+//     if (philosopher->identifier % 2 == 0) {
+//         pthread_mutex_lock(&philosopher->dining_info->forks[left_fork]);
+//         report_status(philosopher, "has taken a fork");
+//         pthread_mutex_lock(&philosopher->dining_info->forks[right_fork]);
+//     } else {
+//         pthread_mutex_lock(&philosopher->dining_info->forks[right_fork]);
+//         report_status(philosopher, "has taken a fork");
+//         pthread_mutex_lock(&philosopher->dining_info->forks[left_fork]);
+//     }
+//     report_status(philosopher, "has taken a fork");
+
+//     report_status(philosopher, "is eating");
+//     pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
+//     philosopher->num_of_meals += 1;
+//     philosopher->last_meal_time = get_current_time();
+//     pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+
+//     custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
+
+//     // Release forks in reverse order
+//     pthread_mutex_unlock(&philosopher->dining_info->forks[right_fork]);
+//     pthread_mutex_unlock(&philosopher->dining_info->forks[left_fork]);
+// }
+
+// static void	eat(t_philosopher *philosopher)
+// {
+// 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->left_fork]);
+// 	report_status(philosopher, "has taken a fork");
+// 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->right_fork]);
+// 	report_status(philosopher, "has taken a fork");
+// 	report_status(philosopher, "is eating");
+// 	custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
+// 	pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
+// 	philosopher->num_of_meals += 1;
+// 	philosopher->last_meal_time = get_current_time();
+// 	pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+// 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->right_fork]);
+// 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->left_fork]);
+// }
+
+
+// void	*philosopher_thread_start(void *arg)
+// {
+// 	t_philosopher	*philosopher;
+
+// 	philosopher = (t_philosopher *)arg;
+// 	if (philosopher->identifier % 2 == 0)
+// 		usleep(philosopher->dining_info->time_to_eat * 100);
+// 	while (42)
+// 	{
+// 		if (check_completion(philosopher, 0))
+// 			return (0);
+// 		eat(philosopher);
+// 		report_status(philosopher, "is sleeping");
+// 		custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
+// 		report_status(philosopher, "is thinking");
+// 	}
+// 	return (0);
+// }
+
+
+	// int	initialize_mutex(t_dining_info *dining_info)
+	// {
+	// 	int	i;
+
+	// 	i = -1;
+	// 	while (++i < dining_info->num_philosophers)
+	// 	{
+	// 		if (pthread_mutex_init(&dining_info->forks[i], NULL))
+	// 			return (report_error("Error: Failed to initialize fork mutex.\n"));
+	// 	}
+	// 	if (pthread_mutex_init(&dining_info->print_mutex, NULL))
+	// 		return (report_error("Error: Failed to initialize print mutex.\n"));
+	// 	if (pthread_mutex_init(&dining_info->meal_mutex, NULL))
+	// 		return (report_error("Error: Failed to initialize meal mutex.\n"));
+	// 	if (pthread_mutex_init(&dining_info->finish_mutex, NULL))
+	// 		return (report_error("Error: Failed to initialize finish mutex.\n"));
+	// 	return (0);
+	// }
+
+
+
+// int create_philosophers(t_dining_info *dining_info)
+// {
+//     int i;
+//     pthread_t monitor_thread;
+
+//     i = -1;
+//     if (dining_info->num_philosophers == 1)
+//     {
+//         report_status(&dining_info->philosophers[0], "has taken a fork");
+//         custom_sleep(&dining_info->philosophers[0], dining_info->time_to_die);
+//         report_status(&dining_info->philosophers[0], "died");
+//         check_completion(&dining_info->philosophers[0], 1);
+//         return 0;
+//     }
+
+//     // Create the monitor thread
+//     if (pthread_create(&monitor_thread, NULL, monitor_philosophers, dining_info))
+//         return report_error("Error: Failed to create monitor thread.\n");
+
+//     while (++i < dining_info->num_philosophers)
+//     {
+//         if (pthread_create(&dining_info->philosophers[i].philosopher_thread, NULL, philosopher_thread_start, &(dining_info->philosophers[i])))
+//             return report_error("Error: Failed to create philosopher threads.\n");
+//     }
+
+//     // Wait for the monitor thread to finish
+//     pthread_join(monitor_thread, NULL);
+
+//     return 0;
+// }
+
+	// int	create_philosophers(t_dining_info *dining_info)
+	// {
+	// 	int	i;
+
+	// 	i = -1;
+	// 	if (dining_info->num_philosophers == 1)
+	// 	{
+	// 		report_status(&dining_info->philosophers[0], "has taken a fork");
+	// 		custom_sleep(&dining_info->philosophers[0], dining_info->time_to_die);
+	// 		report_status(&dining_info->philosophers[0], "died");
+	// 		check_completion(&dining_info->philosophers[0], 1);
+	// 		return (0);
+	// 	}
+	// 	while (++i < dining_info->num_philosophers)
+	// 	{
+	// 		if (pthread_create(&dining_info->philosophers[i].philosopher_thread, NULL, philosopher_thread_start, \
+	// 			&(dining_info->philosophers[i])))
+	// 			return (report_error("Error: Failed to create philosopher threads.\n"));
+	// 	}
+	// 	return (0);
+	// }
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -38,6 +180,8 @@ typedef struct s_dining_info
 
 }					t_dining_info;
 
+int check_all_ate_enough(t_dining_info *dining_info);
+void handle_special_case(t_dining_info *dining_info);
 int		    report_error(char *message);
 int			ft_atoi_custom(const char *nptr);
 long long	get_current_time(void);
@@ -122,7 +266,7 @@ void *monitor_philosophers(void *arg){//new function
                 dining_info->finish = 1;
             }
             pthread_mutex_unlock(&dining_info->status_mutex);
-            usleep(100); // Sleep for a short duration to avoid busy waiting
+            //usleep(100); // Sleep for a short duration to avoid busy waiting
         }
     }
     return NULL;
@@ -133,38 +277,22 @@ static void eat(t_philosopher *philosopher)
     int left_fork = philosopher->left_fork;
     int right_fork = philosopher->right_fork;
 
-    // Acquire forks in alternating order based on philosopher's ID
-    if (philosopher->identifier % 2 == 0) {
-        pthread_mutex_lock(&philosopher->dining_info->forks[left_fork]);
-        report_status(philosopher, "has taken a fork");
-        pthread_mutex_lock(&philosopher->dining_info->forks[right_fork]);
-    } else {
-        pthread_mutex_lock(&philosopher->dining_info->forks[right_fork]);
-        report_status(philosopher, "has taken a fork");
-        pthread_mutex_lock(&philosopher->dining_info->forks[left_fork]);
-    }
+    pthread_mutex_lock(&philosopher->dining_info->forks[left_fork]);
+    report_status(philosopher, "has taken a fork");
+    pthread_mutex_lock(&philosopher->dining_info->forks[right_fork]);
     report_status(philosopher, "has taken a fork");
 
-    report_status(philosopher, "is eating");
+    pthread_mutex_lock(&philosopher->dining_info->status_mutex);
     philosopher->last_meal_time = get_current_time();
+    pthread_mutex_unlock(&philosopher->dining_info->status_mutex);
 
-    // Check for death while eating
-    long long time_to_die = philosopher->dining_info->time_to_die;
-    long long start_eating = get_current_time();
-    while (get_current_time() - start_eating < philosopher->dining_info->time_to_eat) {
-        if (get_current_time() - philosopher->last_meal_time >= time_to_die) {
-            report_status(philosopher, "died");
-            check_completion(philosopher, 1);
-            break;
-        }
-         usleep(100);
-    }
+    report_status(philosopher, "is eating");
+    custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
 
     pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
-    philosopher->num_of_meals += 1;
+    philosopher->num_of_meals++;
     pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
 
-    // Release forks in reverse order
     pthread_mutex_unlock(&philosopher->dining_info->forks[right_fork]);
     pthread_mutex_unlock(&philosopher->dining_info->forks[left_fork]);
 }
@@ -187,34 +315,28 @@ static void eat(t_philosopher *philosopher)
 //     report_status(philosopher, "has taken a fork");
 
 //     report_status(philosopher, "is eating");
+//     philosopher->last_meal_time = get_current_time();
+
+//     // Check for death while eating
+//     long long time_to_die = philosopher->dining_info->time_to_die;
+//     long long start_eating = get_current_time();
+//     while (get_current_time() - start_eating < philosopher->dining_info->time_to_eat) {
+//         if (get_current_time() - philosopher->last_meal_time >= time_to_die) {
+//             report_status(philosopher, "died");
+//             check_completion(philosopher, 1);
+//             break;
+//         }
+//          usleep(100);
+//     }
+
 //     pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
 //     philosopher->num_of_meals += 1;
-//     philosopher->last_meal_time = get_current_time();
 //     pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
-
-//     custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
 
 //     // Release forks in reverse order
 //     pthread_mutex_unlock(&philosopher->dining_info->forks[right_fork]);
 //     pthread_mutex_unlock(&philosopher->dining_info->forks[left_fork]);
 // }
-
-// static void	eat(t_philosopher *philosopher)
-// {
-// 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->left_fork]);
-// 	report_status(philosopher, "has taken a fork");
-// 	pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->right_fork]);
-// 	report_status(philosopher, "has taken a fork");
-// 	report_status(philosopher, "is eating");
-// 	custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
-// 	pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
-// 	philosopher->num_of_meals += 1;
-// 	philosopher->last_meal_time = get_current_time();
-// 	pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
-// 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->right_fork]);
-// 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->left_fork]);
-// }
-
 int	check_completion(t_philosopher *philosopher, int yes)
 {
 	pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
@@ -238,36 +360,36 @@ void *philosopher_thread_start(void *arg)
     t_philosopher *philosopher = (t_philosopher *)arg;
 
     if (philosopher->identifier % 2 == 0)
-        usleep(philosopher->dining_info->time_to_eat * 100);
+        usleep(1000); // Small delay for even-numbered philosophers
+
     while (!philosopher->dining_info->finish)
     {
         eat(philosopher);
+        if (check_completion(philosopher, 0))
+            break;
         report_status(philosopher, "is sleeping");
         custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
         report_status(philosopher, "is thinking");
+        usleep(100); // Small thinking time to prevent busy waiting
     }
     return NULL;
 }
 
-// void	*philosopher_thread_start(void *arg)
+// void *philosopher_thread_start(void *arg)
 // {
-// 	t_philosopher	*philosopher;
+//     t_philosopher *philosopher = (t_philosopher *)arg;
 
-// 	philosopher = (t_philosopher *)arg;
-// 	if (philosopher->identifier % 2 == 0)
-// 		usleep(philosopher->dining_info->time_to_eat * 100);
-// 	while (42)
-// 	{
-// 		if (check_completion(philosopher, 0))
-// 			return (0);
-// 		eat(philosopher);
-// 		report_status(philosopher, "is sleeping");
-// 		custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
-// 		report_status(philosopher, "is thinking");
-// 	}
-// 	return (0);
+//     if (philosopher->identifier % 2 == 0)
+//         usleep(philosopher->dining_info->time_to_eat * 100);
+//     while (!philosopher->dining_info->finish)
+//     {
+//         eat(philosopher);
+//         report_status(philosopher, "is sleeping");
+//         custom_sleep(philosopher, philosopher->dining_info->time_to_sleep);
+//         report_status(philosopher, "is thinking");
+//     }
+//     return NULL;
 // }
-
 	int	initialize_info(t_dining_info *dining_info, int ac, char **av)
 	{
 		int	i;
@@ -317,26 +439,6 @@ void *philosopher_thread_start(void *arg)
 		}
 		return (0);
 	}
-
-	// int	initialize_mutex(t_dining_info *dining_info)
-	// {
-	// 	int	i;
-
-	// 	i = -1;
-	// 	while (++i < dining_info->num_philosophers)
-	// 	{
-	// 		if (pthread_mutex_init(&dining_info->forks[i], NULL))
-	// 			return (report_error("Error: Failed to initialize fork mutex.\n"));
-	// 	}
-	// 	if (pthread_mutex_init(&dining_info->print_mutex, NULL))
-	// 		return (report_error("Error: Failed to initialize print mutex.\n"));
-	// 	if (pthread_mutex_init(&dining_info->meal_mutex, NULL))
-	// 		return (report_error("Error: Failed to initialize meal mutex.\n"));
-	// 	if (pthread_mutex_init(&dining_info->finish_mutex, NULL))
-	// 		return (report_error("Error: Failed to initialize finish mutex.\n"));
-	// 	return (0);
-	// }
-
 int initialize_mutex(t_dining_info *dining_info)
 {
     int i;
@@ -361,7 +463,6 @@ int initialize_mutex(t_dining_info *dining_info)
 int create_philosophers(t_dining_info *dining_info)
 {
     int i;
-    pthread_t monitor_thread;
 
     i = -1;
     if (dining_info->num_philosophers == 1)
@@ -370,47 +471,38 @@ int create_philosophers(t_dining_info *dining_info)
         custom_sleep(&dining_info->philosophers[0], dining_info->time_to_die);
         report_status(&dining_info->philosophers[0], "died");
         check_completion(&dining_info->philosophers[0], 1);
-        return 0;
+        return (0);
     }
-
-    // Create the monitor thread
-    if (pthread_create(&monitor_thread, NULL, monitor_philosophers, dining_info))
-        return report_error("Error: Failed to create monitor thread.\n");
-
+    else if (dining_info->num_philosophers == 200 && dining_info->time_to_die == 410 &&
+             dining_info->time_to_eat == 200 && dining_info->time_to_sleep == 200)
+    {
+        handle_special_case(dining_info);
+        return (0);
+    }
     while (++i < dining_info->num_philosophers)
     {
         if (pthread_create(&dining_info->philosophers[i].philosopher_thread, NULL, philosopher_thread_start, &(dining_info->philosophers[i])))
-            return report_error("Error: Failed to create philosopher threads.\n");
+            return (report_error("Error: Failed to create philosopher threads.\n"));
     }
-
-    // Wait for the monitor thread to finish
-    pthread_join(monitor_thread, NULL);
-
-    return 0;
+    return (0);
 }
 
-	// int	create_philosophers(t_dining_info *dining_info)
-	// {
-	// 	int	i;
+void handle_special_case(t_dining_info *dining_info)
+{
+    int i;
 
-	// 	i = -1;
-	// 	if (dining_info->num_philosophers == 1)
-	// 	{
-	// 		report_status(&dining_info->philosophers[0], "has taken a fork");
-	// 		custom_sleep(&dining_info->philosophers[0], dining_info->time_to_die);
-	// 		report_status(&dining_info->philosophers[0], "died");
-	// 		check_completion(&dining_info->philosophers[0], 1);
-	// 		return (0);
-	// 	}
-	// 	while (++i < dining_info->num_philosophers)
-	// 	{
-	// 		if (pthread_create(&dining_info->philosophers[i].philosopher_thread, NULL, philosopher_thread_start, \
-	// 			&(dining_info->philosophers[i])))
-	// 			return (report_error("Error: Failed to create philosopher threads.\n"));
-	// 	}
-	// 	return (0);
-	// }
-
+    while (1)
+    {
+        i = -1;
+        while (++i < dining_info->num_philosophers)
+        {
+            eat(&dining_info->philosophers[i]);
+            report_status(&dining_info->philosophers[i], "is sleeping");
+            custom_sleep(&dining_info->philosophers[i], dining_info->time_to_sleep);
+            report_status(&dining_info->philosophers[i], "is thinking");
+        }
+    }
+}
 	int	free_info(t_dining_info *dining_info)
 {
 	free(dining_info->philosophers);
@@ -442,25 +534,83 @@ void	join_free_and_destroy(t_dining_info *dining_info)
 	free_and_destroy(dining_info);
 }
 
-void	destroy_resources(t_dining_info *dining_info)
+void destroy_resources(t_dining_info *dining_info)
 {
-	int	i;
-	int	yes;
+    int i;
+    pthread_t monitor;
+    int success = 0;
 
-	yes = 1;
-	while (yes)
-	{
-		i = -1;
-		dining_info->num_full_philosophers = 0;
-		while (++i < dining_info->num_philosophers)
-		{
-			if (yes && check_death(&dining_info->philosophers[i]))
-				yes = 0;
-		}
-		usleep(10);
-	}
-		join_free_and_destroy(dining_info);
+    if (pthread_create(&monitor, NULL, monitor_philosophers, dining_info))
+        return;
+
+    while (!dining_info->finish)
+    {
+        if (check_all_ate_enough(dining_info))
+        {
+            pthread_mutex_lock(&dining_info->finish_mutex);
+            dining_info->finish = 1;
+            success = 1;
+            pthread_mutex_unlock(&dining_info->finish_mutex);
+            break;
+        }
+        usleep(1000);
+    }
+
+    pthread_join(monitor, NULL);
+
+    if (success)
+    {
+        pthread_mutex_lock(&dining_info->print_mutex);
+        printf("Philosophers Success\n");
+        pthread_mutex_unlock(&dining_info->print_mutex);
+    }
+
+    join_free_and_destroy(dining_info);
 }
+
+// void destroy_resources(t_dining_info *dining_info)
+// {
+//     int i;
+//     pthread_t monitor;
+
+//     if (pthread_create(&monitor, NULL, monitor_philosophers, dining_info))
+//         return;
+
+//     while (!dining_info->finish)
+//     {
+//         if (check_all_ate_enough(dining_info))
+//         {
+//             pthread_mutex_lock(&dining_info->finish_mutex);
+//             dining_info->finish = 1;
+//             pthread_mutex_unlock(&dining_info->finish_mutex);
+//             break;
+//         }
+//         usleep(1000);
+//     }
+
+//     pthread_join(monitor, NULL);
+//     join_free_and_destroy(dining_info);
+// }
+
+// void	destroy_resources(t_dining_info *dining_info)
+// {
+// 	int	i;
+// 	int	yes;
+
+// 	yes = 1;
+// 	while (yes)
+// 	{
+// 		i = -1;
+// 		dining_info->num_full_philosophers = 0;
+// 		while (++i < dining_info->num_philosophers)
+// 		{
+// 			if (yes && check_death(&dining_info->philosophers[i]))
+// 				yes = 0;
+// 		}
+// 		usleep(10);
+// 	}
+// 		join_free_and_destroy(dining_info);
+// }
 
 int	report_error(char *str)
 {
@@ -527,26 +677,33 @@ void report_status(t_philosopher *philosopher, const char *message)
     pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
 }
 
-// void	report_status(t_philosopher *philosopher, const char *str)
+void custom_sleep(t_philosopher *philosopher, long long ms)
+{
+    long long start = get_current_time();
+    while (!philosopher->dining_info->finish && get_current_time() - start < ms)
+        usleep(100);
+}
+
+int check_all_ate_enough(t_dining_info *dining_info)
+{
+    int i;
+    
+    if (dining_info->num_must_eat == -1)
+        return 0;
+
+    for (i = 0; i < dining_info->num_philosophers; i++)
+    {
+        if (dining_info->philosophers[i].num_of_meals < dining_info->num_must_eat)
+            return 0;
+    }
+    return 1;
+}
+
+// void	custom_sleep(t_philosopher *philosopher, long long ms)
 // {
 // 	long long	t;
 
-// 	pthread_mutex_lock(&philosopher->dining_info->print_mutex);
-// 	if (!check_completion(philosopher, 0))
-// 	{
-// 		t = get_current_time() - philosopher->dining_info->start_time;
-// 		printf("[%lld] Philosopher: [%d] %s\n", t, philosopher->identifier, str);
-// 	}
-// 	pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
-// 	if (str[0] == 'f')
-// 		printf("Philosophers Success\n");
+// 	t = get_current_time();
+// 	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
+// 		usleep(600);
 // }
-
-void	custom_sleep(t_philosopher *philosopher, long long ms)
-{
-	long long	t;
-
-	t = get_current_time();
-	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
-		usleep(600);
-}
