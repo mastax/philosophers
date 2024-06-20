@@ -44,3 +44,22 @@ End of Script
 This script provides an overview of the project's structure, the purpose of each function,
 and how they contribute to solving the Dining Philosophers Problem. 
 Let me know if you need further clarification on any part!
+
+
+This program simulates the dining behavior of philosophers using multithreading and mutexes. It consists of several key components:
+
+Structures: The program defines two main structures, t_philosopher representing individual philosophers and t_dining_info representing dining information for the simulation.
+
+Initialization: The main function initializes the dining information based on command-line arguments, creates philosophers, and initializes mutexes for synchronization.
+
+Philosopher Lifecycle: Each philosopher is represented by a thread executing the philosopher_thread_start function. This function manages the lifecycle of each philosopher, including eating, sleeping, and thinking in an infinite loop.
+
+Resource Management: The program uses mutexes to manage access to shared resources such as forks and meal-related data. This ensures that only one philosopher can access a fork at a time and that meal-related data is updated safely.
+
+Completion Check: The program checks for two conditions to complete the simulation: either a philosopher dies or all philosophers have eaten the required number of meals. Once either condition is met, the simulation terminates.
+
+Error Handling: The program includes error handling for invalid input and resource allocation failures. Error messages are printed to stderr, and appropriate error codes are returned.
+
+Overall, this program demonstrates concurrent programming concepts such as thread synchronization and resource management to simulate a classic dining philosophers problem.
+
+Feel free to adjust or expand upon this explanation as needed!
