@@ -1,4 +1,4 @@
-NAME = philo -g #-fsanitize=thread
+NAME = philo 
 SRCS = ft_free.c \
 		ft_init.c \
 		ft_philo.c \
@@ -8,7 +8,7 @@ SRCS = ft_free.c \
 HEADER = philo.h
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror 
+FLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread
 RM = rm -rf
 
 OBJS = $(SRCS:.c=.o)

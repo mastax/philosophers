@@ -77,22 +77,59 @@ int	main(int ac, char **av)
 	destroy_resources(&dining_info);
 }
 
-int check_death(t_philosopher *philosopher)
-{
+
+int check_death(t_philosopher *philosopher) {
     pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
     long long current_time = get_current_time();
     long long time_since_last_meal = current_time - philosopher->last_meal_time;
-    
-    if (time_since_last_meal >= philosopher->dining_info->time_to_die)
-    {
+
+    if (time_since_last_meal >= philosopher->dining_info->time_to_die) {
         report_status(philosopher, "died");
         check_completion(philosopher, 1);
         pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
         return (1);
     }
+
+    // Update last_meal_time only after checking for death
+    philosopher->last_meal_time = current_time;
     pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
     return (0);
 }
+
+
+// int check_death(t_philosopher *philosopher)
+// {
+//     pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
+//     long long current_time = get_current_time();
+//     long long time_since_last_meal = current_time - philosopher->last_meal_time;
+    
+//     if (time_since_last_meal >= philosopher->dining_info->time_to_die)
+//     {
+//         report_status(philosopher, "died");
+//         check_completion(philosopher, 1);
+//         pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+//         return (1);
+//     }
+//     pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+//     return (0);
+// }
+
+// int check_death(t_philosopher *philosopher)
+// {
+//     pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
+//     long long current_time = get_current_time();
+//     long long time_since_last_meal = current_time - philosopher->last_meal_time;
+    
+//     if (time_since_last_meal >= philosopher->dining_info->time_to_die)
+//     {
+//         report_status(philosopher, "died");
+//         check_completion(philosopher, 1);
+//         pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+//         return (1);
+//     }
+//     pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+//     return (0);
+// }
 
 // int check_death(t_philosopher *philosopher)
 // {
@@ -195,7 +232,6 @@ int check_death(t_philosopher *philosopher)
 // 	pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->left_fork]);
 // }
 
-
 void eat(t_philosopher *philosopher)
 {
     pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->left_fork]);
@@ -218,6 +254,30 @@ void eat(t_philosopher *philosopher)
         pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->left_fork]);
     }
 }
+
+
+// void eat(t_philosopher *philosopher)
+// {
+//     pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->left_fork]);
+//     report_status(philosopher, "has taken a fork");
+//     pthread_mutex_lock(&philosopher->dining_info->forks[philosopher->right_fork]);
+//     report_status(philosopher, "has taken a fork");
+//     report_status(philosopher, "is eating");
+    
+//     pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
+//     philosopher->last_meal_time = get_current_time();
+//     philosopher->num_of_meals++;
+//     pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+    
+//     custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
+    
+//     // Check for death before releasing forks
+//     if (!check_death(philosopher))
+//     {
+//         pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->right_fork]);
+//         pthread_mutex_unlock(&philosopher->dining_info->forks[philosopher->left_fork]);
+//     }
+// }
 
 
 // void eat(t_philosopher *philosopher)
@@ -290,6 +350,7 @@ void eat(t_philosopher *philosopher)
 int check_completion(t_philosopher *philosopher, int yes)
 {
     int result = 0;
+	pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
     pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
     if (yes)
     {
@@ -319,6 +380,9 @@ int check_completion(t_philosopher *philosopher, int yes)
         }
     }
     pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+	pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
+
+
     return result;
 }
 
