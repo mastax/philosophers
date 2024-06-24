@@ -18,6 +18,7 @@
 # include <pthread.h>
 # include <unistd.h>
 # include <sys/time.h>
+# include <string.h>
 
 typedef struct s_philosopher
 {
@@ -45,9 +46,13 @@ typedef struct s_dining_info
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	meal_mutex;
 	pthread_mutex_t	finish_mutex;
+	pthread_mutex_t	status_mutex;
+
 }					t_dining_info;
 
-void	eat(t_philosopher *philosopher);
+void eat(t_philosopher *philosopher);
+void *monitor_philosophers(void *arg);
+int check_all_ate_enough(t_dining_info *dining_info);
 void handle_special_case(t_dining_info *dining_info);
 int		    report_error(char *message);
 int			ft_atoi_custom(const char *nptr);

@@ -46,26 +46,45 @@ long long	get_current_time(void)
 	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
 }
 
-void	report_status(t_philosopher *philosopher, const char *str)
+void report_status(t_philosopher *philosopher, const char *message)
 {
-	long long	t;
+    long long t;
+    int should_print = 0;
 
-	pthread_mutex_lock(&philosopher->dining_info->print_mutex);
-	if (!check_completion(philosopher, 0))
-	{
-		t = get_current_time() - philosopher->dining_info->start_time;
-		printf("[%lld] Philosopher: [%d] %s\n", t, philosopher->identifier, str);
-	}
-	pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
-	if (str[0] == 'f')
-		printf("Philosophers Success\n");
+    pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
+    if (!philosopher->dining_info->finish)
+    {
+        should_print = 1;
+    }
+    pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+
+    if (should_print)
+    {
+        pthread_mutex_lock(&philosopher->dining_info->print_mutex);
+        t = get_current_time() - philosopher->dining_info->start_time;
+        printf("[%lld] Philosopher: [%d] %s\n", t, philosopher->identifier, message);
+        if (strcmp(message, "is eating") == 0)
+        {
+            pthread_mutex_lock(&philosopher->dining_info->status_mutex);
+            philosopher->last_meal_time = get_current_time();
+            pthread_mutex_unlock(&philosopher->dining_info->status_mutex);
+        }
+        pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
+    }
 }
 
-void	custom_sleep(t_philosopher *philosopher, long long ms)
+void custom_sleep(t_philosopher *philosopher, long long ms)
 {
-	long long	t;
-
-	t = get_current_time();
-	while (!check_completion(philosopher, 0) && (get_current_time() - t) < ms)
-		usleep(600);
+    long long start = get_current_time();
+    while (1)
+    {
+        pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
+        if (philosopher->dining_info->finish || get_current_time() - start >= ms)
+        {
+            pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+            break;
+        }
+        pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+        usleep(100);
+    }
 }

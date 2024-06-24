@@ -4,6 +4,7 @@ SRCS = ft_free.c \
 		ft_philo.c \
 		main.c \
 		utils.c \
+		monitor.c \
 
 HEADER = philo.h
 

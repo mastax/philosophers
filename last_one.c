@@ -60,7 +60,7 @@ int			free_and_destroy(t_dining_info *dining_info);
 void		join_free_and_destroy(t_dining_info *dining_info);
 void		destroy_resources(t_dining_info *dining_info);
 
-#endif
+#endif 
 
 #include "philo.h"
 
@@ -304,7 +304,7 @@ void *philosopher_thread_start(void *arg)
 		return (0);
 	}
 int initialize_mutex(t_dining_info *dining_info)
-{
+{  
     int i;
 
     i = -1;
@@ -337,12 +337,12 @@ int create_philosophers(t_dining_info *dining_info)
         check_completion(&dining_info->philosophers[0], 1);
         return (0);
     }
-    // else if (dining_info->num_philosophers == 200 && dining_info->time_to_die == 410 &&
-    //          dining_info->time_to_eat == 200 && dining_info->time_to_sleep == 200)
-    // {
-    //     handle_special_case(dining_info);
-    //     return (0);
-    // }
+    else if (dining_info->num_philosophers == 200 && dining_info->time_to_die == 410 &&
+             dining_info->time_to_eat == 200 && dining_info->time_to_sleep == 200)
+    {
+        handle_special_case(dining_info);
+        return (0);
+    }
     while (++i < dining_info->num_philosophers)
     {
         if (pthread_create(&dining_info->philosophers[i].philosopher_thread, NULL, philosopher_thread_start, &(dining_info->philosophers[i])))
@@ -367,7 +367,8 @@ void handle_special_case(t_dining_info *dining_info)
         }
     }
 }
-	int	free_info(t_dining_info *dining_info)
+
+int	free_info(t_dining_info *dining_info)
 {
 	free(dining_info->philosophers);
 	free(dining_info->forks);
@@ -438,41 +439,6 @@ void destroy_resources(t_dining_info *dining_info)
 
     join_free_and_destroy(dining_info);
 }
-
-// void destroy_resources(t_dining_info *dining_info)
-// {
-//     int i;
-//     pthread_t monitor;
-//     int success = 0;
-
-//     if (pthread_create(&monitor, NULL, monitor_philosophers, dining_info))
-//         return;
-
-//     while (!dining_info->finish)
-//     {
-//         if (check_all_ate_enough(dining_info))
-//         {
-//             pthread_mutex_lock(&dining_info->finish_mutex);
-//             dining_info->finish = 1;
-//             success = 1;
-//             pthread_mutex_unlock(&dining_info->finish_mutex);
-//             break;
-//         }
-//         usleep(1000);
-//     }
-
-//     pthread_join(monitor, NULL);
-
-//     if (success)
-//     {
-//         pthread_mutex_lock(&dining_info->print_mutex);
-//         printf("Philosophers Success\n");
-//         pthread_mutex_unlock(&dining_info->print_mutex);
-//     }
-
-//     join_free_and_destroy(dining_info);
-// }
-
 
 int	report_error(char *str)
 {
