@@ -6,7 +6,7 @@
 /*   By: elel-bah <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 10:55:07 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/06/04 12:56:41 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/06/25 16:18:12 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 
 typedef struct s_philosopher
 {
-	int				identifier;
-	int				num_of_meals;
-	int				left_fork;
-	int				right_fork;
-	long long		last_meal_time;
+	int						identifier;
+	int						num_of_meals;
+	int						left_fork;
+	int						right_fork;
+	long long				last_meal_time;
 	struct s_dining_info	*dining_info;
-	pthread_t		philosopher_thread;
+	pthread_t				philosopher_thread;
 }					t_philosopher;
 
 typedef struct s_dining_info
@@ -41,20 +41,19 @@ typedef struct s_dining_info
 	int				num_full_philosophers;
 	int				finish;
 	long long		start_time;
-	t_philosopher			*philosophers;
+	t_philosopher	*philosophers;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	meal_mutex;
 	pthread_mutex_t	finish_mutex;
 	pthread_mutex_t	status_mutex;
-
 }					t_dining_info;
 
-void eat(t_philosopher *philosopher);
-void *monitor_philosophers(void *arg);
-int check_all_ate_enough(t_dining_info *dining_info);
-void handle_special_case(t_dining_info *dining_info);
-int		    report_error(char *message);
+void		eat(t_philosopher *philosopher);
+void		*monitor_philosophers(void *arg);
+int			check_all_ate_enough(t_dining_info *dining_info);
+void		handle_special_case(t_dining_info *dining_info);
+int			report_error(char *message);
 int			ft_atoi_custom(const char *nptr);
 long long	get_current_time(void);
 void		report_status(t_philosopher *philosopher, const char *message);
