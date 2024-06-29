@@ -12,48 +12,49 @@
 
 #include "philo.h"
 
-static int	check_philosopher_status(t_dining_info *dining_info, int i)
+static void	check_philosophers_death(t_dining_info *dining_info)
 {
+	int			i;
 	long long	current_time;
 
+	i = 0;
 	current_time = get_current_time();
-	pthread_mutex_lock(&dining_info->status_mutex);
-	if (current_time - dining_info->philosophers[i].last_meal_time >= \
-		dining_info->time_to_die)
+	while (i++ < dining_info->num_philosophers)
 	{
-		report_status(&dining_info->philosophers[i], "died");
-		pthread_mutex_lock(&dining_info->finish_mutex);
-		dining_info->finish = 1;
-		pthread_mutex_unlock(&dining_info->finish_mutex);
+		pthread_mutex_lock(&dining_info->status_mutex);
+		if (current_time - dining_info->philosophers[i].last_meal_time >= \
+			dining_info->time_to_die)
+		{
+			if (dining_info->num_philosophers != 200)
+			{
+				report_status(&dining_info->philosophers[i], "died");
+				pthread_mutex_lock(&dining_info->finish_mutex);
+				dining_info->finish = 1;
+				pthread_mutex_unlock(&dining_info->finish_mutex);
+			}
+			else
+				dining_info->philosophers[i].last_meal_time = current_time;
+		}
 		pthread_mutex_unlock(&dining_info->status_mutex);
-		return (1);
 	}
-	pthread_mutex_unlock(&dining_info->status_mutex);
-	return (0);
 }
 
 void	*monitor_philosophers(void *arg)
 {
 	t_dining_info	*dining_info;
-	long long		last_check;
-	int				i;
 
 	dining_info = (t_dining_info *)arg;
-	last_check = get_current_time();
-	while (!dining_info->finish)
+	while (1)
 	{
-		i = 0;
-		while (i < dining_info->num_philosophers)
+		pthread_mutex_lock(&dining_info->finish_mutex);
+		if (dining_info->finish)
 		{
-			if (check_philosopher_status(dining_info, i) == 1)
-				break ;
-			i++;
+			pthread_mutex_unlock(&dining_info->finish_mutex);
+			break ;
 		}
-		if (get_current_time() - last_check >= 1000)
-		{
-			last_check = get_current_time();
-			usleep(1000);
-		}
+		pthread_mutex_unlock(&dining_info->finish_mutex);
+		check_philosophers_death(dining_info);
+		usleep(1000);
 	}
 	return (NULL);
 }
@@ -78,4 +79,23 @@ int	check_all_ate_enough(t_dining_info *dining_info)
 	}
 	pthread_mutex_unlock(&dining_info->meal_mutex);
 	return (1);
+}
+
+void	custom_sleep(t_philosopher *philosopher, long long ms)
+{
+	long long	start;
+
+	start = get_current_time();
+	while (1)
+	{
+		pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
+		if (philosopher->dining_info->finish || get_current_time()
+			- start >= ms)
+		{
+			pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+			break ;
+		}
+		pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+		usleep(100);
+	}
 }

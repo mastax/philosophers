@@ -58,6 +58,16 @@ long long	get_current_time(void)
 	return ((timeval.tv_sec * 1000) + (timeval.tv_usec / 1000));
 }
 
+int	ft_strcmp(const char *str1, const char *str2)
+{
+	unsigned int	it;
+
+	it = 0;
+	while (str1[it] == str2[it] && str1[it] != '\0')
+		it++;
+	return ((unsigned char)str1[it] - (unsigned char)str2[it]);
+}
+
 void	report_status(t_philosopher *philosopher, const char *message)
 {
 	long long	t;
@@ -76,7 +86,7 @@ void	report_status(t_philosopher *philosopher, const char *message)
 		t = get_current_time() - philosopher->dining_info->start_time;
 		printf("[%lld] Philosopher: [%d] %s\n", t, philosopher->identifier,
 			message);
-		if (ft_strncmpp(message, "is eating") == 0)
+		if (ft_strcmp(message, "is eating") == 0)
 		{
 			pthread_mutex_lock(&philosopher->dining_info->status_mutex);
 			philosopher->last_meal_time = get_current_time();
@@ -84,36 +94,4 @@ void	report_status(t_philosopher *philosopher, const char *message)
 		}
 		pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
 	}
-}
-
-void	custom_sleep(t_philosopher *philosopher, long long ms)
-{
-	long long	start;
-
-	start = get_current_time();
-	while (1)
-	{
-		pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
-		if (philosopher->dining_info->finish || get_current_time()
-			- start >= ms)
-		{
-			pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
-		usleep(100);
-	}
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] != '\0' && i < n)
-		i++;
-	if (i == n)
-		return (0);
-	else
-		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

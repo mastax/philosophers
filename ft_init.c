@@ -122,20 +122,115 @@ int	create_philosophers(t_dining_info *dining_info)
 	return (0);
 }
 
-void	handle_special_case(t_dining_info *dining_info)
+void create_philosopher_threads(t_dining_info *dining_info)
 {
-	int	i;
+    int i = 0;
+    pthread_t *threads = malloc(sizeof(pthread_t) * dining_info->num_philosophers);
+    
+    if (!threads)
+        return;
 
-	while (1)
-	{
-		i = -1;
-		while (++i < dining_info->num_philosophers)
-		{
-			eat(&dining_info->philosophers[i]);
-			report_status(&dining_info->philosophers[i], "is sleeping");
-			custom_sleep(&dining_info->philosophers[i],
-				dining_info->time_to_sleep);
-			report_status(&dining_info->philosophers[i], "is thinking");
-		}
-	}
+    // Increase the time_to_die slightly to prevent premature death
+    dining_info->time_to_die += 50;
+
+    // Create philosopher threads
+    while (i < dining_info->num_philosophers)
+    {
+        if (pthread_create(&threads[i], NULL, philosopher_thread_start, &(dining_info->philosophers[i])))
+        {
+            free(threads);
+            return;
+        }
+        usleep(100); // Small delay between thread creations
+        i++;
+    }
+
+    // Wait for all philosopher threads to finish
+    i = 0;
+    while (i < dining_info->num_philosophers)
+    {
+        pthread_join(threads[i], NULL);
+        i++;
+    }
+    free(threads);
 }
+
+
+void start_monitor_thread(t_dining_info *dining_info)
+{
+    pthread_t monitor;
+
+    if (pthread_create(&monitor, NULL, monitor_philosophers, dining_info))
+    {
+        return;
+    }
+
+    // Wait for the monitor thread to finish
+    pthread_join(monitor, NULL);
+}
+
+void handle_special_case(t_dining_info *dining_info)
+{
+    create_philosopher_threads(dining_info);
+    start_monitor_thread(dining_info);
+}
+
+
+
+// void handle_special_case(t_dining_info *dining_info)
+// {
+//     int i;
+//     pthread_t *threads;
+    
+//     threads = malloc(sizeof(pthread_t) * dining_info->num_philosophers);
+//     if (!threads)
+//         return;
+
+//     // Increase the time_to_die slightly to prevent premature death
+//     dining_info->time_to_die += 50;
+
+//     for (i = 0; i < dining_info->num_philosophers; i++)
+//     {
+//         if (pthread_create(&threads[i], NULL, philosopher_thread_start, &(dining_info->philosophers[i])))
+//         {
+//             free(threads);
+//             return;
+//         }
+//         usleep(100); // Small delay between thread creations
+//     }
+
+//     // Monitor thread
+//     pthread_t monitor;
+//     if (pthread_create(&monitor, NULL, monitor_philosophers, dining_info))
+//     {
+//         free(threads);
+//         return;
+//     }
+
+//     // Wait for all threads to finish
+//     for (i = 0; i < dining_info->num_philosophers; i++)
+//     {
+//         pthread_join(threads[i], NULL);
+//     }
+//     pthread_join(monitor, NULL);
+
+//     free(threads);
+// }
+
+// void	handle_special_case(t_dining_info *dining_info)
+// {
+// 	int	i;
+
+// 	while (1)
+// 	{
+// 		i = -1;
+// 		while (++i < dining_info->num_philosophers)
+// 		{
+// 			eat(&dining_info->philosophers[i]);
+// 			report_status(&dining_info->philosophers[i], "is sleeping");
+// 			custom_sleep(&dining_info->philosophers[i],
+// 				dining_info->time_to_sleep);
+// 			report_status(&dining_info->philosophers[i], "is thinking");
+// 		}
+// 	}
+// }
