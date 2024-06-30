@@ -87,7 +87,7 @@ static void wait_for_completion(t_dining_info *dining_info, int *success)
 
 static void join_philosopher_threads(t_dining_info *dining_info)
 {
-	int i;
+	int	i;
 
 	for (i = 0; i < dining_info->num_philosophers; i++)
 	{
