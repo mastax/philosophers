@@ -6,7 +6,7 @@
 /*   By: elel-bah <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:40:19 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/06/25 15:40:21 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/06/29 15:14:14 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	report_status(t_philosopher *philosopher, const char *message)
 	{
 		pthread_mutex_lock(&philosopher->dining_info->print_mutex);
 		t = get_current_time() - philosopher->dining_info->start_time;
-		printf("[%lld] Philosopher: [%d] %s\n", t, philosopher->identifier,
+		printf("%lld %d %s\n", t, philosopher->identifier,
 			message);
 		if (ft_strcmp(message, "is eating") == 0)
 		{

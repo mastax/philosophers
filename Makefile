@@ -5,11 +5,13 @@ SRCS = ft_free.c \
 		main.c \
 		utils.c \
 		monitor.c \
+		special_case.c \
+		destroy_resources.c \
 
 HEADER = philo.h
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread
+FLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 RM = rm -rf
 
 OBJS = $(SRCS:.c=.o)
