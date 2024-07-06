@@ -12,7 +12,8 @@
 
 #include "philo.h"
 
-static	int	create_philosopher_threads(t_dining_info *dining_info, pthread_t *threads)
+static int	create_philosopher_threads(t_dining_info *dining_info,
+		pthread_t *threads)
 {
 	int	i;
 
@@ -28,7 +29,8 @@ static	int	create_philosopher_threads(t_dining_info *dining_info, pthread_t *thr
 	return (0);
 }
 
-static void	join_all_threads(t_dining_info *dining_info, pthread_t *threads, pthread_t monitor)
+static void	join_all_threads(t_dining_info *dining_info, pthread_t *threads,
+		pthread_t monitor)
 {
 	int	i;
 
