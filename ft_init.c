@@ -103,11 +103,6 @@ int	create_philosophers(t_dining_info *dining_info)
 		check_completion(&dining_info->philosophers[0], 1);
 		return (0);
 	}
-	else if (dining_info->num_philosophers == 200 && \
-				dining_info->time_to_die == 410 && \
-				dining_info->time_to_eat == 200 && \
-				dining_info->time_to_sleep == 200)
-		handle_special_case(dining_info);
 	while (++i < dining_info->num_philosophers)
 	{
 		if (pthread_create(&dining_info->philosophers[i].philosopher_thread,

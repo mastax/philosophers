@@ -5,7 +5,6 @@ SRCS = ft_free.c \
 		main.c \
 		utils.c \
 		monitor.c \
-		special_case.c \
 		destroy_resources.c
 
 HEADER = philo.h
