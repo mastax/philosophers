@@ -41,7 +41,6 @@ typedef struct s_dining_info
 void		eat(t_philosopher *philosopher);
 void		*monitor_philosophers(void *arg);
 int			check_all_ate_enough(t_dining_info *dining_info);
-void		handle_special_case(t_dining_info *dining_info);
 int			report_error(char *message);
 int			ft_atoi_custom(const char *nptr);
 long long	get_current_time(void);
