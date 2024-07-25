@@ -52,9 +52,9 @@ void	eat(t_philosopher *philosopher)
 	report_status(philosopher, "has taken a fork");
 	pthread_mutex_lock(&philosopher->dining_info->forks[right_fork]);
 	report_status(philosopher, "has taken a fork");
-	// pthread_mutex_lock(&philosopher->dining_info->status_mutex); //already in the function of report_status
+	// pthread_mutex_lock(&philosopher->dining_info->last_meal_mutex); //already in the function of report_status
 	// philosopher->last_meal_time = get_current_time();
-	// pthread_mutex_unlock(&philosopher->dining_info->status_mutex);
+	// pthread_mutex_unlock(&philosopher->dining_info->last_meal_mutex);
 	report_status(philosopher, "is eating");
 	custom_sleep(philosopher, philosopher->dining_info->time_to_eat);
 	pthread_mutex_lock(&philosopher->dining_info->meal_mutex);

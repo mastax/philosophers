@@ -21,7 +21,7 @@ static void	check_philosophers_death(t_dining_info *dining_info)
 	current_time = get_current_time();
 	while (++i < dining_info->num_philosophers)
 	{
-		pthread_mutex_lock(&dining_info->status_mutex);
+		pthread_mutex_lock(&dining_info->last_meal_mutex);
 		if (current_time - dining_info->philosophers[i].last_meal_time > \
 			dining_info->time_to_die)
 		{
@@ -35,7 +35,7 @@ static void	check_philosophers_death(t_dining_info *dining_info)
 			else
 				dining_info->philosophers[i].last_meal_time = current_time;
 		}
-		pthread_mutex_unlock(&dining_info->status_mutex);
+		pthread_mutex_unlock(&dining_info->last_meal_mutex);
 	}
 }
 

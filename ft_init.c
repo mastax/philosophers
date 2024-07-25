@@ -85,7 +85,7 @@ int	initialize_mutex(t_dining_info *dining_info)
 		return (report_error("Error: Failed to initialize meal mutex.\n"));
 	if (pthread_mutex_init(&dining_info->finish_mutex, NULL))
 		return (report_error("Error: Failed to initialize finish mutex.\n"));
-	if (pthread_mutex_init(&dining_info->status_mutex, NULL))
+	if (pthread_mutex_init(&dining_info->last_meal_mutex, NULL))
 		return (report_error("Error: Failed to initialize status mutex.\n"));
 	return (0);
 }

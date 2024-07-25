@@ -46,7 +46,7 @@ typedef struct s_dining_info
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	meal_mutex;
 	pthread_mutex_t	finish_mutex;
-	pthread_mutex_t	status_mutex;
+	pthread_mutex_t	last_meal_mutex;
 }					t_dining_info;
 
 void		eat(t_philosopher *philosopher);

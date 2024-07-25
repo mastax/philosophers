@@ -88,9 +88,9 @@ void	report_status(t_philosopher *philosopher, const char *message)
 			message);
 		if (ft_strcmp(message, "is eating") == 0)
 		{
-			pthread_mutex_lock(&philosopher->dining_info->status_mutex);
+			pthread_mutex_lock(&philosopher->dining_info->last_meal_mutex);
 			philosopher->last_meal_time = get_current_time();
-			pthread_mutex_unlock(&philosopher->dining_info->status_mutex);
+			pthread_mutex_unlock(&philosopher->dining_info->last_meal_mutex);
 		}
 		pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
 	}
