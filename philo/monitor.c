@@ -59,6 +59,29 @@ void	*monitor_philosophers(void *arg)
 	return (NULL);
 }
 
+// // Update the check_all_ate_enough function
+// int check_all_ate_enough(t_dining_info *dining_info)
+// {
+//     int i;
+//     int all_ate_enough = 1;
+
+//     if (dining_info->num_must_eat == -1)
+//         return (0);
+//     pthread_mutex_lock(&dining_info->meal_mutex);
+//     i = 0;
+//     while (i < dining_info->num_philosophers)
+//     {
+//         if (dining_info->philosophers[i].num_of_meals < dining_info->num_must_eat)
+//         {
+//             all_ate_enough = 0;
+//             break;
+//         }
+//         i++;
+//     }
+//     pthread_mutex_unlock(&dining_info->meal_mutex);
+//     return (all_ate_enough);
+// }
+
 int	check_all_ate_enough(t_dining_info *dining_info)
 {
 	int	i;
