@@ -42,3 +42,13 @@ void	join_free_and_destroy(t_dining_info *dining_info)
 		pthread_join(dining_info->philosophers[i].philosopher_thread, NULL);
 	free_and_destroy(dining_info);
 }
+
+int	report_error(char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+		write(2, &str[i], 1);
+	return (1);
+}

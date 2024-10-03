@@ -75,5 +75,6 @@ int			free_info(t_dining_info *dining_info);
 int			free_and_destroy(t_dining_info *dining_info);
 void		join_free_and_destroy(t_dining_info *dining_info);
 void		destroy_resources(t_dining_info *dining_info);
+int			ft_strcmp(const char *str1, const char *str2);
 
 #endif

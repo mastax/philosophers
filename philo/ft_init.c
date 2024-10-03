@@ -12,14 +12,13 @@
 
 #include "philo.h"
 
-int	initialize_info(t_dining_info *dining_info, int ac, char **av)
+int	validate_input(int ac, char **av, t_dining_info *dining_info)
 {
-	int	i;
-
-	i = 0;
 	if (ac < 5 || ac > 6)
-		return (report_error("Error: Invalid number of arguments.\
-				Expected 5 or 6.\n"));
+	{
+		report_error("Error: Invalid number of arguments. ");
+		return (report_error("Expected 5 or 6.\n"));
+	}
 	dining_info->num_philosophers = ft_atoi_custom(av[1]);
 	if (dining_info->num_philosophers > 200)
 		return (report_error("Error: too many philosophers\n"));
@@ -28,20 +27,71 @@ int	initialize_info(t_dining_info *dining_info, int ac, char **av)
 	dining_info->time_to_sleep = ft_atoi_custom(av[4]);
 	if (dining_info->num_philosophers < 1 || dining_info->time_to_die < 1 || \
 			dining_info->time_to_eat < 1 || dining_info->time_to_sleep < 1)
-		return (report_error("Error: Invalid input.\
-				All parameters must be greater than 0.\n"));
+	{
+		report_error("Error: Invalid input. All parameters");
+		return (report_error(" must be greater than 0.\n"));
+	}
+	return (0);
+}
+
+int	initialize_info(t_dining_info *dining_info, int ac, char **av)
+{
+	int	result;
+
+	result = validate_input(ac, av, dining_info);
+	if (result != 0)
+		return (result);
 	if (ac == 6)
 	{
 		dining_info->num_must_eat = ft_atoi_custom(av[5]);
 		if (dining_info->num_must_eat < 1)
-			return (report_error("Error: Invalid input.\
-					Number of meals must be greater than 0.\n"));
+		{
+			report_error("Error: Invalid input. Number of meals");
+			return (report_error(" must be greater than 0.\n"));
+		}
 	}
 	else
 		dining_info->num_must_eat = -1;
 	dining_info->finish = 0;
 	return (0);
 }
+
+// int	initialize_info(t_dining_info *dining_info, int ac, char **av)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (ac < 5 || ac > 6)
+// 	{
+// 		report_error("Error: Invalid number of arguments. ");
+// 		return (report_error("Expected 5 or 6.\n"));
+// 	}
+// 	dining_info->num_philosophers = ft_atoi_custom(av[1]);
+// 	if (dining_info->num_philosophers > 200)
+// 		return (report_error("Error: too many philosophers\n"));
+// 	dining_info->time_to_die = ft_atoi_custom(av[2]);
+// 	dining_info->time_to_eat = ft_atoi_custom(av[3]);
+// 	dining_info->time_to_sleep = ft_atoi_custom(av[4]);
+// 	if (dining_info->num_philosophers < 1 || dining_info->time_to_die < 1 || \
+// 			dining_info->time_to_eat < 1 || dining_info->time_to_sleep < 1)
+// 	{
+// 		report_error("Error: Invalid input. All parameters");
+// 		return (report_error(" must be greater than 0.\n"));
+// 	}
+// 	if (ac == 6)
+// 	{
+// 		dining_info->num_must_eat = ft_atoi_custom(av[5]);
+// 		if (dining_info->num_must_eat < 1)
+// 		{
+// 			report_error("Error: Invalid input. Number of meals");
+// 			return (report_error(" must be greater than 0.\n"));
+// 		}
+// 	}
+// 	else
+// 		dining_info->num_must_eat = -1;
+// 	dining_info->finish = 0;
+// 	return (0);
+// }
 
 int	initialize_philosophers(t_dining_info *dining_info)
 {

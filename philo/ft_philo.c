@@ -89,7 +89,9 @@ void	*philosopher_thread_start(void *arg)
 	while (1)
 	{
 		pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
-		if (philosopher->num_of_meals == philosopher->dining_info->num_must_eat || philosopher->dining_info->finish)
+		if (philosopher->num_of_meals == \
+			philosopher->dining_info->num_must_eat || \
+			philosopher->dining_info->finish)
 		{
 			pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
 			break ;
@@ -102,4 +104,32 @@ void	*philosopher_thread_start(void *arg)
 		usleep(100);
 	}
 	return (NULL);
+}
+
+void	report_status(t_philosopher *philosopher, const char *message)
+{
+	long long	t;
+	int			should_print;
+
+	should_print = 0;
+	pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
+	if (!philosopher->dining_info->finish)
+	{
+		should_print = 1;
+	}
+	pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+	if (should_print)
+	{
+		pthread_mutex_lock(&philosopher->dining_info->print_mutex);
+		t = get_current_time() - philosopher->dining_info->start_time;
+		printf("%lld %d %s\n", t, philosopher->identifier,
+			message);
+		if (ft_strcmp(message, "is eating") == 0)
+		{
+			pthread_mutex_lock(&philosopher->dining_info->last_meal_mutex);
+			philosopher->last_meal_time = get_current_time();
+			pthread_mutex_unlock(&philosopher->dining_info->last_meal_mutex);
+		}
+		pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
+	}
 }

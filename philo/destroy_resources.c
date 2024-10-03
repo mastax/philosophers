@@ -14,7 +14,6 @@
 
 static void	wait_for_completion(t_dining_info *dining_info, int *success)
 {
-	t_philosopher *xxx;
 	while (1)
 	{
 		pthread_mutex_lock(&dining_info->finish_mutex);
