@@ -25,7 +25,7 @@ static void	check_philosophers_death(t_dining_info *dining_info)
 		if (current_time - dining_info->philosophers[i].last_meal_time > \
 			dining_info->time_to_die)
 		{
-			if (dining_info->num_philosophers != 200)
+			if (dining_info->num_philosophers)
 			{
 				report_status(&dining_info->philosophers[i], "died");
 				pthread_mutex_lock(&dining_info->finish_mutex);

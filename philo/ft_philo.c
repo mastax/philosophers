@@ -12,35 +12,6 @@
 
 #include "philo.h"
 
-int	check_death(t_philosopher *philosopher)
-{
-	pthread_mutex_lock(&philosopher->dining_info->meal_mutex);
-	if ((get_current_time() - philosopher->last_meal_time) >= \
-		philosopher->dining_info->time_to_die)
-	{
-		report_status(philosopher, "died");
-		check_completion(philosopher, 1);
-		pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
-		return (1);
-	}
-	else if (philosopher->dining_info->num_must_eat > \
-			0 && philosopher->num_of_meals >= \
-			philosopher->dining_info->num_must_eat)
-	{
-		philosopher->dining_info->num_full_philosophers++;
-		if (philosopher->dining_info->num_full_philosophers >= \
-			philosopher->dining_info->num_philosophers)
-		{
-			check_completion(philosopher, 1);
-			report_status(philosopher, "f");
-			pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
-			return (1);
-		}
-	}
-	pthread_mutex_unlock(&philosopher->dining_info->meal_mutex);
-	return (0);
-}
-
 void	eat(t_philosopher *philosopher)
 {
 	int	left_fork;

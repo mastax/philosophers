@@ -53,7 +53,7 @@ void	destroy_resources(t_dining_info *dining_info)
 	int			success;
 
 	success = 0;
-	if (dining_info->num_philosophers != 200)
+	if (dining_info->num_philosophers)
 	{
 		if (pthread_create(&monitor, NULL, monitor_philosophers, dining_info))
 			return ;
