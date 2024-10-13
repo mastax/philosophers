@@ -10,7 +10,7 @@ SRCS = ft_free.c \
 HEADER = philo.h
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+FLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
 OBJS = $(SRCS:.c=.o)
@@ -19,6 +19,9 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(HEADER)
 	$(CC) $(FLAGS) $(OBJS) -o$(NAME)
+
+%.o: %.c $(HEADER)
+	$(CC) $(FLAGS) -c $< -o $@
 
 re: fclean all
 

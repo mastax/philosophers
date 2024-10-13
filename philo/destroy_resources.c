@@ -67,5 +67,5 @@ void	destroy_resources(t_dining_info *dining_info)
 		}
 	}
 	join_philosopher_threads(dining_info);
-	join_free_and_destroy(dining_info);
+	free_and_destroy(dining_info);
 }

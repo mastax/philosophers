@@ -48,14 +48,12 @@ typedef struct s_dining_info
 	pthread_mutex_t	meal_mutex;
 	pthread_mutex_t	finish_mutex;
 	pthread_mutex_t	last_meal_mutex;
-	pthread_mutex_t	status_mutex;
 
 }					t_dining_info;
 
 void		eat(t_philosopher *philosopher);
 void		*monitor_philosophers(void *arg);
 int			check_all_ate_enough(t_dining_info *dining_info);
-void		handle_special_case(t_dining_info *dining_info);
 int			report_error(char *message);
 int			ft_atoi_custom(const char *nptr);
 long long	get_current_time(void);
@@ -67,13 +65,11 @@ int			initialize_philosophers(t_dining_info *dining_info);
 int			initialize_mutex(t_dining_info *dining_info);
 int			create_philosophers(t_dining_info *dining_info);
 
-int			check_death(t_philosopher *philosopher);
 int			check_completion(t_philosopher *philosopher, int yes);
 void		*philosopher_thread_start(void *arg);
 
 int			free_info(t_dining_info *dining_info);
 int			free_and_destroy(t_dining_info *dining_info);
-void		join_free_and_destroy(t_dining_info *dining_info);
 void		destroy_resources(t_dining_info *dining_info);
 int			ft_strcmp(const char *str1, const char *str2);
 

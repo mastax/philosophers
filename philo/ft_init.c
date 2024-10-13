@@ -122,7 +122,7 @@ int	create_philosophers(t_dining_info *dining_info)
 				NULL, philosopher_thread_start,
 				&(dining_info->philosophers[i])))
 			return (report_error("Error:\
-					Failed to create philosopher threads.\n"));
+				Failed to create philosophers threads.\n"));
 	}
 	return (0);
 }

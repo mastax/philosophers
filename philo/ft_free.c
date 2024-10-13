@@ -30,17 +30,8 @@ int	free_and_destroy(t_dining_info *dining_info)
 	pthread_mutex_destroy(&dining_info->print_mutex);
 	pthread_mutex_destroy(&dining_info->meal_mutex);
 	pthread_mutex_destroy(&dining_info->finish_mutex);
+	pthread_mutex_destroy(&dining_info->last_meal_mutex);
 	return (0);
-}
-
-void	join_free_and_destroy(t_dining_info *dining_info)
-{
-	int	i;
-
-	i = -1;
-	while (++i < dining_info->num_philosophers)
-		pthread_join(dining_info->philosophers[i].philosopher_thread, NULL);
-	free_and_destroy(dining_info);
 }
 
 int	report_error(char *str)
