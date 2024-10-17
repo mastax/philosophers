@@ -15,9 +15,7 @@
 int	main(int ac, char **av)
 {
 	t_dining_info	dining_info;
-	long long		start_time;
 
-	start_time = get_current_time();
 	if (initialize_info(&dining_info, ac, av))
 		return (0);
 	if (initialize_philosophers(&dining_info))

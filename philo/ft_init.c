@@ -67,8 +67,11 @@ int	initialize_philosophers(t_dining_info *dining_info)
 			* dining_info->num_philosophers);
 	dining_info->start_time = get_current_time();
 	if (!dining_info->philosophers || !dining_info->forks)
+	{
+		free(dining_info->philosophers);
 		return (report_error("Error:\
 				Failed to allocate memory for philosophers or forks.\n"));
+	}
 	while (++i < dining_info->num_philosophers)
 	{
 		dining_info->philosophers[i].identifier = i + 1;
