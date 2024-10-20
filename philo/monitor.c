@@ -12,53 +12,6 @@
 
 #include "philo.h"
 
-// static void	check_philosophers_death(t_dining_info *dining_info)
-// {
-// 	int			i;
-// 	long long	current_time;
-
-// 	i = -1;
-// 	current_time = get_current_time();
-// 	while (++i < dining_info->num_philosophers)
-// 	{
-// 		if (dining_info->num_philosophers)
-// 		{
-// 			pthread_mutex_lock(&dining_info->last_meal_mutex);
-// 			if (current_time - dining_info->philosophers[i].last_meal_time > \
-// 				dining_info->time_to_die)
-// 			{
-// 				report_status(&dining_info->philosophers[i], "died");
-// 				pthread_mutex_lock(&dining_info->finish_mutex);
-// 				dining_info->finish = 1;
-// 				pthread_mutex_unlock(&dining_info->finish_mutex);
-// 			}
-// 			else
-// 				dining_info->philosophers[i].last_meal_time = current_time;
-// 		}
-// 		pthread_mutex_unlock(&dining_info->last_meal_mutex);
-// 	}
-// }
-
-// void	*monitor_philosophers(void *arg)
-// {
-// 	t_dining_info	*dining_info;
-
-// 	dining_info = (t_dining_info *)arg;
-// 	while (1)
-// 	{
-// 		pthread_mutex_lock(&dining_info->finish_mutex);
-// 		if (dining_info->finish)
-// 		{
-// 			pthread_mutex_unlock(&dining_info->finish_mutex);
-// 			break ;
-// 		}
-// 		pthread_mutex_unlock(&dining_info->finish_mutex);
-// 		check_philosophers_death(dining_info);
-// 		usleep(1000);
-// 	}
-// 	return (NULL);
-// }
-
 int	check_all_ate_enough(t_dining_info *dining_info)
 {
 	int	i;
