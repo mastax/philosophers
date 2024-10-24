@@ -6,7 +6,7 @@
 /*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:06:31 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/10/24 17:38:21 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:41:36 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	join_and_print(t_dining_info *dining_info, int success)
 	while (++i < dining_info->num_philosophers)
 		pthread_join(dining_info->philosophers[i].philosopher_thread, NULL);
 	if (success)
-		return;
+		return ;
 }
 
 void	destroy_resources(t_dining_info *dining_info)

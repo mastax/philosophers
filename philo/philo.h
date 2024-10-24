@@ -6,7 +6,7 @@
 /*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 10:55:07 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/10/24 17:38:45 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:41:20 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,5 @@ int			free_info(t_dining_info *dining_info);
 int			free_and_destroy(t_dining_info *dining_info);
 void		destroy_resources(t_dining_info *dining_info);
 int			ft_strcmp(const char *str1, const char *str2);
-
-// int check_if_simulation_ended(t_philosopher *philosopher);
 
 #endif
