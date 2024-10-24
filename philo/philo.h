@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elel-bah <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 10:55:07 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/06/29 15:13:47 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:26:33 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <pthread.h>
 # include <unistd.h>
 # include <sys/time.h>
-# include <string.h>
 # include <limits.h>
 
 typedef struct s_philosopher
@@ -71,5 +70,7 @@ int			free_info(t_dining_info *dining_info);
 int			free_and_destroy(t_dining_info *dining_info);
 void		destroy_resources(t_dining_info *dining_info);
 int			ft_strcmp(const char *str1, const char *str2);
+
+// int check_if_simulation_ended(t_philosopher *philosopher);
 
 #endif

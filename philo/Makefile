@@ -11,14 +11,14 @@ HEADER = philo.h
 
 CC = cc
 FLAGS = -Wall -Wextra -Werror
-RM = rm -rf
+RM = rm -f
 
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(HEADER)
-	$(CC) $(FLAGS) $(OBJS) -o$(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
 
 %.o: %.c $(HEADER)
 	$(CC) $(FLAGS) -c $< -o $@

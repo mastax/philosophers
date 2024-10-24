@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_philo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elel-bah <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:40:38 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/06/29 15:12:20 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:28:46 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,10 @@ void	report_status(t_philosopher *philosopher, const char *message)
 	{
 		pthread_mutex_lock(&philosopher->dining_info->print_mutex);
 		t = get_current_time() - philosopher->dining_info->start_time;
-		printf("%lld %d %s\n", t, philosopher->identifier,
-			message);
+		if (!philosopher->dining_info->finish)
+			printf("%lld %d %s\n", t, philosopher->identifier, message);
 		if (ft_strcmp(message, "is eating") == 0)
-		{
-			pthread_mutex_lock(&philosopher->dining_info->last_meal_mutex);
 			philosopher->last_meal_time = get_current_time();
-			pthread_mutex_unlock(&philosopher->dining_info->last_meal_mutex);
-		}
 		pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elel-bah <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:39:59 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/06/29 15:12:53 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:28:01 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ int	main(int ac, char **av)
 	if (initialize_mutex(&dining_info))
 		return (free_and_destroy(&dining_info));
 	if (create_philosophers(&dining_info))
-		return (0);
+		return (free_and_destroy(&dining_info), 0);
 	destroy_resources(&dining_info);
 }
