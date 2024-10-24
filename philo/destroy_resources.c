@@ -6,7 +6,7 @@
 /*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:06:31 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/10/24 17:41:36 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:04:33 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	check_philosopher_death(t_dining_info *dining_info)
 	{
 		pthread_mutex_lock(&dining_info->last_meal_mutex);
 		if (current_time - dining_info->philosophers[i].last_meal_time \
-			> dining_info->time_to_die)
+			>= dining_info->time_to_die)
 		{
 			report_status(&dining_info->philosophers[i], "died");
 			pthread_mutex_lock(&dining_info->finish_mutex);
