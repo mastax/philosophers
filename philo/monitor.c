@@ -6,7 +6,7 @@
 /*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:39:33 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/10/24 17:38:40 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/25 12:28:11 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,6 @@ int	check_all_ate_enough(t_dining_info *dining_info)
 	pthread_mutex_unlock(&dining_info->meal_mutex);
 	return (1);
 }
-
-// void    custom_sleep(t_philosopher *philosopher, long long ms)
-// {
-//     long long    start;
-
-//     start = get_current_time();
-//     while (!check_if_simulation_ended(philosopher))
-//     {
-//         if (get_current_time() - start >= ms)
-//             break;
-//         usleep(100);
-//     }
-// }
 
 void	custom_sleep(t_philosopher *philosopher, long long ms)
 {
