@@ -6,7 +6,7 @@
 /*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:06:31 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/10/25 20:41:03 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:43:28 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	check_philosopher_death(t_dining_info *dining_info)
 {
 	long long	current_time;
-	long long last_meal;
+	long long	last_meal;
 	int			i;
 
 	current_time = get_current_time();
@@ -31,10 +31,9 @@ static int	check_philosopher_death(t_dining_info *dining_info)
 			pthread_mutex_lock(&dining_info->finish_mutex);
 			dining_info->finish = 1;
 			pthread_mutex_unlock(&dining_info->finish_mutex);
-			// report_status(&dining_info->philosophers[i], "died");
-			// printf ("is dead\n");
-			if(dining_info->num_philosophers != 1)
-				print_death("died", &dining_info->philosophers[i], dining_info->philosophers[i].identifier);
+			if (dining_info->num_philosophers != 1)
+				print_death("died", &dining_info->philosophers[i], \
+					dining_info->philosophers[i].identifier);
 			return (1);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 10:55:07 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/10/25 15:01:47 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:46:54 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int			free_info(t_dining_info *dining_info);
 int			free_and_destroy(t_dining_info *dining_info);
 void		destroy_resources(t_dining_info *dining_info);
 int			ft_strcmp(const char *str1, const char *str2);
-
-void	print_death(char *message, t_philosopher *philosopher, int identifier);
+void		print_death(char *message, t_philosopher *philosopher, \
+		int identifier);
 
 #endif

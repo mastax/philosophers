@@ -6,7 +6,7 @@
 /*   By: elel-bah <elel-bah@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 15:40:38 by elel-bah          #+#    #+#             */
-/*   Updated: 2024/10/25 19:59:03 by elel-bah         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:46:13 by elel-bah         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,9 @@ void	report_status(t_philosopher *philosopher, const char *message)
 {
 	long long	t;
 	int			should_print;
-	int		is_finish;
+	int			is_finish;
 
-	// should_print = 0;
-	// pthread_mutex_lock(&philosopher->dining_info->finish_mutex);
-	// if (!philosopher->dining_info->finish)
-	// {
-		should_print = 1;
-	// }
-	// pthread_mutex_unlock(&philosopher->dining_info->finish_mutex);
+	should_print = 1;
 	if (should_print)
 	{
 		pthread_mutex_lock(&philosopher->dining_info->print_mutex);
@@ -108,12 +102,13 @@ void	report_status(t_philosopher *philosopher, const char *message)
 		pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
 	}
 }
+
 void	print_death(char *message, t_philosopher *philosopher, int identifier)
 {
 	size_t	time;
 
 	time = get_current_time() - philosopher->dining_info->start_time;
 	pthread_mutex_lock(&philosopher->dining_info->print_mutex);
-		printf("%zu %d %s\n", time, identifier, message);
+	printf("%zu %d %s\n", time, identifier, message);
 	pthread_mutex_unlock(&philosopher->dining_info->print_mutex);
 }
